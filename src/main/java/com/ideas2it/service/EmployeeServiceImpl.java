@@ -2,12 +2,14 @@ package com.ideas2it.service;
 
 import com.ideas2it.dao.EmployeeDao;
 import com.ideas2it.dateTimeUtils.DateTimeUtils;
+import com.ideas2it.exception.EmployeeNotFoundException;
 import com.ideas2it.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -28,43 +30,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee getEmployeeById(int employeeId) {
-        return employeeDao.findById(employeeId).get();
+    public Employee getEmployeeById(int employeeId) throws EmployeeNotFoundException {
+        Optional<Employee> employee = employeeDao.findById(employeeId);
+        if(!employee.isPresent()) {
+            throw new EmployeeNotFoundException("Employee Not Found");
+        }
+        return employee.get();
     }
 
     @Override
-    public Employee updateEmployee(int employeeId,Employee updatedEmployee) {
-       Employee employee = employeeDao.findById(employeeId).get();
-
-        if(Objects.nonNull(updatedEmployee.getEmployeeType()) && !"".equals(updatedEmployee.getEmployeeType())) {
-            employee.setEmployeeType(updatedEmployee.getEmployeeType());
-        }
-
-        if(Objects.nonNull(updatedEmployee.getName()) && !"".equals(updatedEmployee.getName())) {
-            employee.setName(updatedEmployee.getName());
-        }
-
-        if(Objects.nonNull(updatedEmployee.getMobileNumber()) && !"".equals(updatedEmployee.getMobileNumber())) {
-            employee.setMobileNumber(updatedEmployee.getMobileNumber());
-        }
-
-        if(Objects.nonNull(updatedEmployee.getEmailId()) && !"".equals(updatedEmployee.getEmailId())) {
-            employee.setEmailId(updatedEmployee.getEmailId());
-        }
-
-        if(Objects.nonNull(updatedEmployee.getDateOfBirth()) && !"".equals(updatedEmployee.getDateOfBirth())) {
-            employee.setDateOfBirth(updatedEmployee.getDateOfBirth());
-        }
-
-        if(Objects.nonNull(updatedEmployee.getDesignation()) && !"".equals(updatedEmployee.getDesignation())) {
-            employee.setDesignation(updatedEmployee.getDesignation());
-        }
-
-        if(Objects.nonNull(updatedEmployee.getGender()) && !"".equals(updatedEmployee.getGender())) {
-            employee.setGender(updatedEmployee.getGender());
-        }
-
-        employee.setModifiedAt(dateTimeUtils.getDate());
+    public Employee updateEmployee(Employee employee) {
         return employeeDao.save(employee);
     }
 
