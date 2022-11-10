@@ -59,8 +59,9 @@ public class EmployeeController {
     }
 
     @GetMapping("/getLeaveRecordsByEmployeeId/{employeeId}")
-    public List<LeaveRecords> getLeaveRecordsByEmployeeId(@PathVariable int employeeId) {
-        return leaveRecordService.getLeaveRecords(employeeId);
+    public List<LeaveRecords> getLeaveRecordsByEmployeeId(@PathVariable int employeeId) throws EmployeeNotFoundException {
+        Employee employee = employeeService.getEmployeeById(employeeId);
+        return leaveRecordService.getLeaveRecords(employee);
     }
 
     @GetMapping("/getAllLeaveRecords")
