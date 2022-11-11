@@ -1,5 +1,6 @@
 package com.ideas2it.service;
 
+import com.ideas2it.dto.EmployeeDTO;
 import com.ideas2it.model.Employee;
 import com.ideas2it.model.LeaveRecords;
 import org.springframework.data.jpa.repository.Query;

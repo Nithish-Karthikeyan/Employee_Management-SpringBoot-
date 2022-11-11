@@ -1,5 +1,6 @@
 package com.ideas2it.controller;
 
+import com.ideas2it.dto.EmployeeDTO;
 import com.ideas2it.exception.EmployeeNotFoundException;
 import com.ideas2it.model.Employee;
 import com.ideas2it.model.LeaveRecords;
@@ -27,23 +28,31 @@ public class EmployeeController {
     }
 
     @PostMapping("/addEmployee")
-    public Employee addEmployee(@Valid @RequestBody Employee employee) {
-        return employeeService.addEmployee(employee);
+    public String addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
+        int employeeId = employeeService.updateEmployee(employeeDTO);
+        String status;
+        if(employeeId == 0) status = "Employee Not Created";
+        else status = "Employee Created Successfully with ID:"+employeeId;
+        return status;
     }
 
     @GetMapping("/getEmployees")
-    public List<Employee> getEmployees() {
+    public List<EmployeeDTO> getEmployees() {
         return employeeService.getEmployees();
     }
 
     @GetMapping("/getEmployee/{employeeId}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable int employeeId) throws EmployeeNotFoundException {
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable int employeeId) throws EmployeeNotFoundException {
         return ResponseEntity.ok(employeeService.getEmployeeById(employeeId));
     }
 
     @PutMapping("/updateEmployee")
-    public Employee updateEmployee(@Valid @RequestBody Employee employee) {
-        return employeeService.updateEmployee(employee);
+    public String updateEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
+        int employeeId = employeeService.updateEmployee(employeeDTO);
+        String status;
+        if(employeeId == 0) status = "Employee Not Update";
+        else status = "Employee Updated Successfully";
+        return status;
     }
 
     @DeleteMapping("/deleteEmployee/{employeeId}")
@@ -52,9 +61,8 @@ public class EmployeeController {
     }
 
     @PostMapping("/addLeaveRecord/{employeeId}")
-    public LeaveRecords addLeaveRecord(@PathVariable int employeeId, LeaveRecords leaveRecord) throws EmployeeNotFoundException {
+    public LeaveRecords addLeaveRecord(@PathVariable int employeeId, @RequestBody LeaveRecords leaveRecord) throws EmployeeNotFoundException {
         Employee employee = employeeService.getEmployeeById(employeeId);
-        leaveRecord.setEmployee(employee);
         return leaveRecordService.addLeaveRecord(leaveRecord);
     }
 
