@@ -14,6 +14,4 @@ public class ProjectDTO {
     private String startDate;
     private String projectManagerName;
     private String clientName;
-    private String createdAt;
-    private String modifiedAt;
 }

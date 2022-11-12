@@ -1,6 +1,7 @@
 package com.ideas2it.controller;
 
 import com.ideas2it.dto.EmployeeDTO;
+import com.ideas2it.dto.LeaveRecordsDTO;
 import com.ideas2it.exception.EmployeeNotFoundException;
 import com.ideas2it.model.Employee;
 import com.ideas2it.model.LeaveRecords;
@@ -61,19 +62,23 @@ public class EmployeeController {
     }
 
     @PostMapping("/addLeaveRecord/{employeeId}")
-    public LeaveRecords addLeaveRecord(@PathVariable int employeeId, @RequestBody LeaveRecords leaveRecord) throws EmployeeNotFoundException {
-        Employee employee = employeeService.getEmployeeById(employeeId);
-        return leaveRecordService.addLeaveRecord(leaveRecord);
+    public String addLeaveRecord(@PathVariable int employeeId, @RequestBody LeaveRecordsDTO leaveRecordDTO) throws EmployeeNotFoundException {
+        EmployeeDTO employeeDTO = employeeService.getEmployeeById(employeeId);
+        int leaveId = leaveRecordService.addLeaveRecord(leaveRecordDTO,employeeDTO);
+        String status;
+        if(leaveId == 0) status = "Leave Record Not Created";
+        else status = "Leave Record Created Successfully";
+        return status;
     }
 
     @GetMapping("/getLeaveRecordsByEmployeeId/{employeeId}")
-    public List<LeaveRecords> getLeaveRecordsByEmployeeId(@PathVariable int employeeId) throws EmployeeNotFoundException {
-        Employee employee = employeeService.getEmployeeById(employeeId);
+    public List<LeaveRecordsDTO> getLeaveRecordsByEmployeeId(@PathVariable int employeeId) throws EmployeeNotFoundException {
+        EmployeeDTO employee = employeeService.getEmployeeById(employeeId);
         return leaveRecordService.getLeaveRecords(employee);
     }
 
     @GetMapping("/getAllLeaveRecords")
-    public List<LeaveRecords> getAllLeaveRecords() {
+    public List<LeaveRecordsDTO> getAllLeaveRecords() {
         return leaveRecordService.getAllLeaveRecords();
     }
 
@@ -81,5 +86,14 @@ public class EmployeeController {
     public String deleteLeaveRecord(@PathVariable int leaveId) {
         leaveRecordService.deleteLeaveRecord(leaveId);
         return "Deleted Successfully";
+    }
+
+    @PutMapping("/updateLeaveRecord")
+    public String updateLeaveRecord(@Valid @RequestBody LeaveRecordsDTO leaveRecordDTO) {
+        int leaveId = leaveRecordService.updateLeaveRecord(leaveRecordDTO);
+        String status;
+        if(leaveId == 0) status = "Leave Record Not Updated";
+        else status = "Leave Record Updated Successfully";
+        return status;
     }
 }

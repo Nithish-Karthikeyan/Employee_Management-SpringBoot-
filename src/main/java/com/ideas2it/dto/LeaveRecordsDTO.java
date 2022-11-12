@@ -13,6 +13,4 @@ public class LeaveRecordsDTO {
     private String fromDate;
     private String toDate;
     private String leaveType;
-    private String createdAt;
-    private String modifiedAt;
 }

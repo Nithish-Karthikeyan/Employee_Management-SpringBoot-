@@ -2,7 +2,6 @@ package com.ideas2it.service;
 
 import com.ideas2it.dto.EmployeeDTO;
 import com.ideas2it.exception.EmployeeNotFoundException;
-import com.ideas2it.model.Employee;
 
 import java.util.List;
 
