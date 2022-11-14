@@ -50,10 +50,12 @@ public class LeaveRecordServiceImpl implements LeaveRecordService {
     }
 
     @Override
-    public int updateLeaveRecord(LeaveRecordsDTO leaveRecordsDTO) {
-        LeaveRecords leaveRecord = leaveRecordsConverter.leaveRecordDTOtoLeaveRecord(leaveRecordsDTO);
+    public int updateLeaveRecord(LeaveRecordsDTO leaveRecordDTO, EmployeeDTO employeeDTO) {
+        LeaveRecords leaveRecord = leaveRecordsConverter.leaveRecordDTOtoLeaveRecord(leaveRecordDTO);
+        Employee employee = employeeConverter.employeeDTOtoEmployee(employeeDTO);
+        leaveRecord.setEmployee(employee);
         leaveRecord.setModifiedAt(dateTimeUtils.getDate());
-        LeaveRecords existLeaveRecord = leaveRecordDao.findById(leaveRecordsDTO.getLeaveId()).get();
+        LeaveRecords existLeaveRecord = leaveRecordDao.findById(leaveRecordDTO.getLeaveId()).get();
         leaveRecord.setCreatedAt(existLeaveRecord.getCreatedAt());
         return leaveRecordDao.save(leaveRecord).getLeaveId();
     }

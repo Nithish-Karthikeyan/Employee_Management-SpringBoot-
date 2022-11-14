@@ -14,9 +14,8 @@ import java.util.List;
 public class Project {
 
     @Id
-    @GeneratedValue(strategy =GenerationType.AUTO)
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
     private int projectId;
-
     private String projectName;
     private String startDate;
     private String projectManagerName;

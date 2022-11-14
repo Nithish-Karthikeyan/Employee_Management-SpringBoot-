@@ -17,7 +17,7 @@ import java.util.List;
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy =GenerationType.AUTO)
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
     private int employeeId;
 
     @NotBlank(message="Please Enter the Name")
@@ -50,7 +50,6 @@ public class Employee {
     @JsonManagedReference
     @OneToMany(mappedBy = "employee")
     private List<LeaveRecords> leaveRecords;
-
 
     @ManyToMany(mappedBy = "employees")
     private List<Project> projects;

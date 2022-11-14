@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class LeaveRecords {
     @Id
-    @GeneratedValue(strategy =GenerationType.AUTO)
+    @GeneratedValue(strategy =GenerationType.IDENTITY)
     private int leaveId;
     private String fromDate;
     private String toDate;

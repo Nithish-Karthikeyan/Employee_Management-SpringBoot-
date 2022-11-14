@@ -2,11 +2,11 @@ package com.ideas2it.controller;
 
 import com.ideas2it.dto.EmployeeDTO;
 import com.ideas2it.dto.LeaveRecordsDTO;
+import com.ideas2it.dto.ProjectDTO;
 import com.ideas2it.exception.EmployeeNotFoundException;
-import com.ideas2it.model.Employee;
-import com.ideas2it.model.LeaveRecords;
 import com.ideas2it.service.EmployeeService;
 import com.ideas2it.service.LeaveRecordService;
+import com.ideas2it.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +23,9 @@ public class EmployeeController {
     @Autowired
     private LeaveRecordService leaveRecordService;
 
+    @Autowired
+    private ProjectService projectService;
+
     @GetMapping("/")
     public String getIndex() {
         return "Welcome to Employee Management Application";
@@ -30,7 +33,7 @@ public class EmployeeController {
 
     @PostMapping("/addEmployee")
     public String addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
-        int employeeId = employeeService.updateEmployee(employeeDTO);
+        int employeeId = employeeService.addEmployee(employeeDTO);
         String status;
         if(employeeId == 0) status = "Employee Not Created";
         else status = "Employee Created Successfully with ID:"+employeeId;
@@ -88,12 +91,46 @@ public class EmployeeController {
         return "Deleted Successfully";
     }
 
-    @PutMapping("/updateLeaveRecord")
-    public String updateLeaveRecord(@Valid @RequestBody LeaveRecordsDTO leaveRecordDTO) {
-        int leaveId = leaveRecordService.updateLeaveRecord(leaveRecordDTO);
+    @PutMapping("/updateLeaveRecord/{employeeId}")
+    public String updateLeaveRecord(@Valid @RequestBody LeaveRecordsDTO leaveRecordDTO, @PathVariable int employeeId) throws EmployeeNotFoundException {
+        EmployeeDTO employeeDTO = employeeService.getEmployeeById(employeeId);
+        int leaveId = leaveRecordService.updateLeaveRecord(leaveRecordDTO, employeeDTO);
         String status;
         if(leaveId == 0) status = "Leave Record Not Updated";
-        else status = "Leave Record Updated Successfully";
+        else status = "Leave Record Updated Successfully with ID:"+leaveId;
+        return status;
+    }
+
+    @PostMapping("/addProject/{employeeId}/{projectManagerId}")
+    public String addProject(@PathVariable int employeeId, @PathVariable int projectManagerId, @RequestBody ProjectDTO projectDTO) throws EmployeeNotFoundException {
+        EmployeeDTO employeeDTO = employeeService.getEmployeeById(employeeId);
+        EmployeeDTO projectManagerDTO = employeeService.getEmployeeById(projectManagerId);
+        int projectId = projectService.addProject(projectDTO,employeeDTO,projectManagerDTO);
+        String status;
+        if(projectId == 0) status = "Project Not Created";
+        else status = "Project Created Successfully with ID:"+projectId;
+        return status;
+    }
+
+    @GetMapping("/getAllProjects")
+    public List<ProjectDTO> getAllProjects() {
+        return projectService.getAllProjects();
+    }
+
+    @GetMapping("/getProjectByEmployeeId/{employeeId}")
+    public List<ProjectDTO> getProjectByEmployeeId(@PathVariable int employeeId) throws EmployeeNotFoundException {
+        EmployeeDTO employee = employeeService.getEmployeeById(employeeId);
+        return projectService.getProject(employee);
+    }
+
+    @PostMapping("/updateProject/{employeeId}/{projectManagerId}")
+    public String updateProject(@PathVariable int employeeId, @PathVariable int projectManagerId, @RequestBody ProjectDTO projectDTO) throws EmployeeNotFoundException {
+        EmployeeDTO employeeDTO = employeeService.getEmployeeById(employeeId);
+        EmployeeDTO projectManagerDTO = employeeService.getEmployeeById(projectManagerId);
+        int projectId = projectService.updateProject(projectDTO,employeeDTO,projectManagerDTO);
+        String status;
+        if(projectId == 0) status = "Project Not Updated";
+        else status = "Project Updated Successfully";
         return status;
     }
 }

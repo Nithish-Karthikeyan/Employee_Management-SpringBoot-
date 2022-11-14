@@ -1,9 +1,7 @@
 package com.ideas2it.converter;
 
-import com.ideas2it.dateTimeUtils.DateTimeUtils;
 import com.ideas2it.dto.EmployeeDTO;
 import com.ideas2it.model.Employee;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -12,8 +10,6 @@ import java.util.List;
 @Component
 public class EmployeeConverter {
 
-    @Autowired
-    private DateTimeUtils dateTimeUtils;
     public Employee employeeDTOtoEmployee(EmployeeDTO employeeDTO){
         Employee employee = new Employee();
         employee.setEmployeeId(employeeDTO.getEmployeeId());
@@ -24,8 +20,6 @@ public class EmployeeConverter {
         employee.setDateOfBirth(employeeDTO.getDateOfBirth());
         employee.setMobileNumber(employeeDTO.getMobileNumber());
         employee.setDesignation(employeeDTO.getDesignation());
-        employee.setCreatedAt(dateTimeUtils.getDate());
-        employee.setModifiedAt(dateTimeUtils.getDate());
         return employee;
     }
 
