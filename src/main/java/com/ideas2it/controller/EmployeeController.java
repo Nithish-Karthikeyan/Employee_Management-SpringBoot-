@@ -32,12 +32,12 @@ public class EmployeeController {
     }
 
     @PostMapping("/addEmployee")
-    public String addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
+    public ResponseEntity<String> addEmployee(@Valid @RequestBody EmployeeDTO employeeDTO) {
         int employeeId = employeeService.addEmployee(employeeDTO);
         String status;
         if(employeeId == 0) status = "Employee Not Created";
         else status = "Employee Created Successfully with ID:"+employeeId;
-        return status;
+        return ResponseEntity.ok(status);
     }
 
     @GetMapping("/getEmployees")

@@ -1,6 +1,5 @@
 package com.ideas2it.dto;
 
-import com.ideas2it.model.Employee;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
